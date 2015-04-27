@@ -26,7 +26,7 @@ At this point your device is ready to go. Close the Arduino IDE (we're not going
 4. Create a file called `blink.js`
 5. Type the following
 
-```
+```js
 var five = require ("johnny-five");
 var board = new five.Board();
 ```
@@ -34,13 +34,13 @@ var board = new five.Board();
 This will create an object that talks to your board. On OSX, that's all you have to do. For Windows, you'll need to set the COM port for your board and for Linux, there's a little extra that you'll need to do. 
 
 Windows:
-```
+```js
 var board = new five.Board({
 	port: "COM4" // Make sure that this is your COM Port from Step 6 above
 	}); 
 ```
 Linux:
-```
+```js
 var serialport = require("serialport");
 var serialPort = new serialport.SerialPort("/dev/ttyATH0", { // Make sure this is correct for your laptop
 		baudrate: 57600
@@ -53,7 +53,7 @@ var board = new five.Board({
 
 Now we're ready to interact with the board. 
 
-```
+```js
 var LEDPIN = 13;
 var OUTPUT = 1;
  
@@ -72,7 +72,7 @@ board.on("ready", function(){
 
 There are a couple methods that you could use to flash the LED but this one gives you more flexibility as it will let you do different things if you can just write to the pins directly. The simplest one is like this: 
 
-```
+```js
   led = new five.Led(13);
   led.strobe(100); // 100 milliseconds
 ```
