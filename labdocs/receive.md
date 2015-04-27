@@ -11,7 +11,7 @@ We're going to start with the same basic telemetry data device that you complete
 ## Adding the LED bits to the app. 
 1. Add the LED bits to the top of the little device app. 
 
-```
+```js
 // these first two were already there
 var five = require("johnny-five");
 var board = new five.Board();
@@ -24,7 +24,7 @@ var led = null;
 
 2. In the board connect, add the LED output device 
 
-```
+```js
     board.on("ready", function(){
         console.log("Board connected...");
 
@@ -42,14 +42,14 @@ A command manager receives and handles commands from the server side.
 
 1. The way that we're going to do this is to create a "command manager". 
 
-        ```
+```js
         function SimpleCommandManager() {
             nitrogen.CommandManager.apply(this, arguments);
         }
 
         SimpleCommandManager.prototype = Object.create(nitrogen.CommandManager.prototype);
         SimpleCommandManager.prototype.constructor = SimpleCommandManager;
-        ```
+```
     
     At this point we've got a command manager object and we've set it's prototype to the generic nitrogen.CommandManager prototype so technically it could receive commands but by default it doesn't tell Nitrogen that it's interested in any messages. 
 
@@ -57,7 +57,7 @@ A command manager receives and handles commands from the server side.
 
     The isCommand function tells Nitrogen that this is a command that you respond to and the isRelevant are messages that you want to see. 
 
-        ```
+```js
         SimpleCommandManager.prototype.isRelevant = function(message) {
             console.log("isRelevant");
 
@@ -71,7 +71,7 @@ A command manager receives and handles commands from the server side.
             console.log("isCommand");
             return message.is('_lightLevel');
         };
-        ```
+```
 
 9. The next thing is to tell Nitrogen which messages you've already handled. 
 
@@ -79,7 +79,7 @@ A command manager receives and handles commands from the server side.
     
     First let the base manager try to handle it and second, try to handle it yourself. You get the two messages, the downstream and the upstream so you can check to see if it was a request response or whatever. 
 
-        ```
+```js
         SimpleCommandManager.prototype.obsoletes = function(downstreamMsg, upstreamMsg) {
             console.log("obsoletes");
 
@@ -92,13 +92,13 @@ A command manager receives and handles commands from the server side.
 
             return value;
         };
-        ```
+```
 
 10. The next bit is to actually receive the message and process it. 
 
     This is a longer function because it's all of your actual business logic. 
 
-        ```
+```js
         SimpleCommandManager.prototype.executeQueue = function(callback) {
             console.log("executeQueue");
 
@@ -155,13 +155,13 @@ A command manager receives and handles commands from the server side.
                 return callback();
             });
         }
-        ```
+```
 
 5. Now we need to kick off the Command Manager as follows
 
     The filter below is an array of tags of on the messages that you're interested in. 
 
-        ```
+```js
         SimpleCommandManager.prototype.start = function(session, callback) {
 
             var filter = {
@@ -170,13 +170,13 @@ A command manager receives and handles commands from the server side.
 
             return nitrogen.CommandManager.prototype.start.call(this, session, filter, callback);
         };
-        ```
+```
 
 6. The very last bit of code is to initialize the command manager in the session start. 
 
     We already have a session start so modify that function as follows
 
-        ```
+```js
         service.connect(simpleLightSensor, function(err, session, simpleLightSensor) {
         ... all of the existing code stays, just add the following
 
@@ -186,7 +186,7 @@ A command manager receives and handles commands from the server side.
             console.log("SimpleCommandManager started.");
         });
 
-        ```
+```
 
     At this point, run your device with the command `> node connect.js` or whatever you called it. 
     
